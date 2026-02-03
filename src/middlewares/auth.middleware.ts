@@ -2,40 +2,39 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JwtPayload, UserRole } from '../types/auth';
 
-// Asegúrate de tener una clave secreta por defecto si no usas dotenv aún
-const JWT_SECRET = process.env.JWT_SECRET || 'mi_clave_secreta_para_desarrollo';
+const JWT_SECRET = process.env.JWT_SECRET || 'clavesupersecreta';
 
-
-export const authenticate = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
+export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
+    return res.status(401).json({ message: 'Acceso denegado: No hay token' });
   }
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token or expired' });
-    }
-    // Guardamos el payload (id, username, role) en req.user
-    req.user = decoded as JwtPayload;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    req.user = decoded;
     next();
-  });
+  } catch (error) {
+    return res.status(403).json({ message: 'Token inválido o expirado' });
+  }
 };
 
-/**
- * Middleware de autorización adaptado a Veterinaria
- */
-export const authorize = (roles: Array<UserRole>) => {
+export const authorize = (roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    // Verificamos si el usuario existe en la req y si su rol está en la lista permitida
-    if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Acceso denegado: No tienes los permisos necesarios' });
+    const user = (req as any).user;
+
+    if (!user) {
+      return res.status(401).json({ message: 'Usuario no autenticado' });
     }
+
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({
+        message: `Acceso prohibido: Se requiere rol ${roles.join(' o ')}`
+      });
+    }
+
     next();
   };
 };

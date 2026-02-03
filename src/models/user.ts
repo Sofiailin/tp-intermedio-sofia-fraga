@@ -13,26 +13,24 @@ export interface IUser extends Document {
 const userSchema = new Schema<IUser>(
   {
     username: { type: String, required: true, unique: true, trim: true },
-    email: { 
-      type: String, 
-      required: true, 
-      unique: true, 
-      lowercase: true, 
-      match: [/^\S+@\S+\.\S+$/, 'Email inválido'] 
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, 'Email inválido']
     },
     password: { type: String, required: true },
-    // Aquí ponemos tus roles de veterinaria
-    role: { 
-      type: String, 
-      enum: Object.values(UserRole), 
-      default: UserRole.DUENIO 
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.DUENIO
     },
   },
   { timestamps: true }
 );
 
 export const User = mongoose.model<IUser>('User', userSchema);
-
 
 export const findUserByEmail = async (email: string) => {
   return await User.findOne({ email }).lean();

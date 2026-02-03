@@ -1,9 +1,6 @@
 import { Pet, IPet } from '../models/Pet';
 import { UserRole } from '../types/auth';
 
-/**
- * Crea una mascota vinculada a un dueño
- */
 export const createPet = async (
   nombre: string,
   especie: string,
@@ -21,18 +18,14 @@ export const createPet = async (
   return savedPet._id.toString();
 };
 
-/**
- * Obtiene mascotas con lógica de negocio por rol
- */
 export const getAllPets = async (
   userId: string,
   role: UserRole
 ): Promise<IPet[]> => {
-  // Si es DUEÑO, solo ve las suyas
   if (role === UserRole.DUENIO) {
+    // Si es dueño, solo ve sus propias mascotas
     return await Pet.find({ duenio: userId }).lean();
   }
-
-  // Si es ADMIN o VETERINARIO, ve todas y traemos datos del dueño (populate)
+  // Si es vet/admin, ve todas y trae info del dueño
   return await Pet.find().populate('duenio', 'username email').lean();
 };

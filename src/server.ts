@@ -1,48 +1,35 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-
 import 'dotenv/config';
+import cors from 'cors';
+
 import authRoutes from './routes/auth.routes';
-import { authenticate, authorize } from './middlewares/auth.middleware';
+import petRoutes from './routes/pet.routes';
+import historialmRoutes from './routes/historialm.routes'; // <--- 1. Importamos las rutas nuevas
 import { connectDB } from './config/database';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para interpretar JSON
+// MIDDLEWARES
+app.use(cors());
 app.use(express.json());
-
-// Middleware para servir archivos estáticos desde la carpeta "public"
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.use('/auth', authRoutes);
+// RUTAS
+app.use('/api/auth', authRoutes);
+app.use('/api/pets', petRoutes);
+app.use('/api/historialm', historialmRoutes); // <--- 2. Activamos la ruta del Historial
 
-app.get('/public', (req: Request, res: Response) => {
-  res.json({
-    message: 'Cualquiera puede entrar!',
-  });
+// Ruta de saludo (prueba)
+app.get('/api/saludo', (req, res) => {
+  res.json({ mensaje: '¡Servidor funcionando perfecto! 🚀' });
 });
 
-app.get('/protected', authenticate, (req, res) => {
-  res.json({
-    message: 'Acceso permitido',
-  });
-});
-
-// Ruta de administrador (requiere autenticación y rol admin)
-app.get('/admin', authenticate, authorize(['admin']), (req, res) => {
-  res.json({
-    message: 'Acceso de administrador permitido',
-  });
-});
-
-app.get('/api/saludo', (req: Request, res: Response) => {
-  res.json({ mensaje: 'Hola desde la API 🚀' });
-});
-
-// Conectar a MongoDB y luego iniciar el servidor HTTP
+// ENCENDIDO DEL SERVIDOR
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT} 🚀`);
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🩺 Historial Médico activo en /api/historialm`);
   });
 });
