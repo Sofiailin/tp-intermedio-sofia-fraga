@@ -69,106 +69,68 @@ HistorialMs: Registro de consultas médicas, vinculadas a una Mascota y al Veter
 
 *Creacion de Veterinaria 
 
-curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "DraSofi",
-    "email": "sofi@vet.com",
-    "password": "1234vet",
-    "role": "veterinario"
-  }'
+curl -X POST http://localhost:3000/api/auth/register -H "Content-Type: application/json" -d '{"username": "DraSofi", "email": "sofi@vet.com", "password": "1234vet", "role": "veterinario"}'
 
 RESPUESTA
 {"message":"Usuario creado exitosamente"}
 
 *Creacion de Duenio 
 
-$ curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "JuanPerez",
-    "email": "juan@gmail.com",
-    "password": "1234juan",
-    "role": "duenio"
-  }'
+curl -X POST http://localhost:3000/api/auth/register -H "Content-Type: application/json" -d '{"username": "JuanPerez", "email": "juan@gmail.com", "password": "1234juan", "role": "duenio"}'
 
 RESPUESTA
 {"message":"Usuario creado exitosamente"}
 
 *Creacion de Administrador 
 
-$ curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "SuperAdmin",
-    "email": "admin@sistema.com",
-    "password": "123super",
-    "role": "admin"
-  }'
+curl -X POST http://localhost:3000/api/auth/register -H "Content-Type: application/json" -d '{"username": "SuperAdmin", "email": "admin@sistema.com", "password": "123super", "role": "admin"}'
 
 RESPUESTA
 {"message":"Usuario creado exitosamente"}
 
 
-Sofi@Mark-1 MINGW64 ~/Desktop
-$ curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "sofi@vet.com",
-    "password": "1234vet"
-  }'
+* Pedido de Loggin
+
+curl -X POST http://localhost:3000/api/auth/login -H "Content-Type: application/json" -d '{"email": "sofi@vet.com", "password": "1234vet"}'
 
 RESPUESTA
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NjQ4N2Y0NGY2MGEzNzJhNmM1MyIsInVzZXJuYW1lIjoiRHJhU29maSIsInJvbGUiOiJ2ZXRlcmluYXJpbyIsImlhdCI6MTc3MDE1Mzk2MCwiZXhwIjoxNzcwMjQwMzYwfQ.X0R4wlDAr36vIX50QfzR4BZ5n2kgXqc0ohbWsk__6R4"}
+{"token":"token"}
 
-Sofi@Mark-1 MINGW64 ~/Desktop
-$ curl -X POST http://localhost:3000/api/pets \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NjQ4N2Y0NGY2MGEzNzJhNmM1MyIsInVzZXJuYW1lIjoiRHJhU29maSIsInJvbGUiOiJ2ZXRlcmluYXJpbyIsImlhdCI6MTc3MDE1Mzk2MCwiZXhwIjoxNzcwMjQwMzYwfQ.X0R4wlDAr36vIX50QfzR4BZ5n2kgXqc0ohbWsk__6R4" \
-  -d '{
-    "nombre": "Firulais",
-    "especie": "Perro",
-    "edad": 5,
-    "duenioId": "698266487f44f60a372a6c53"
-  }'
+* Cargar datos de mascota con el token de usuario habilitado
+
+curl -X POST http://localhost:3000/api/pets -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN> -d '{"nombre": "Firulais", "especie": "Perro", "edad": 5, "duenioId": "698266487f44f60a372a6c53"}'
 
 RESPUESTA
 {"message":"Mascota creada","id":"698268167f44f60a372a6c5a"}
 
-Sofi@Mark-1 MINGW64 ~/Desktop
-$ curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "juan@gmail.com",
-    "password": "1234juan"
-  }'
+* Pedido de Loggin
+curl -X POST http://localhost:3000/api/auth/login -H "Content-Type: application/json" -d '{"email": "juan@gmail.com", "password": "1234juan"}'
 
 RESPUESTA
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NmFkN2Y0NGY2MGEzNzJhNmM1NSIsInVzZXJuYW1lIjoiSnVhblBlcmV6Iiwicm9sZSI6ImR1ZW5pbyIsImlhdCI6MTc3MDE1NDMwMywiZXhwIjoxNzcwMjQwNzAzfQ.t4C9D8dS_fXdJunT74P06rLaOjUlpd4VUvAqR3nv8V4"}
+{"token":"token"}
 
-
-
-Sofi@Mark-1 MINGW64 ~/Desktop
-$ curl -X GET http://localhost:3000/api/pets -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NmFkN2Y0NGY2MGEzNzJhNmM1NSIsInVzZXJuYW1lIjoiSnVhblBlcmV6Iiwicm9sZSI6ImR1ZW5pbyIsImlhdCI6MTc3MDE1NDMwMywiZXhwIjoxNzcwMjQwNzAzfQ.t4C9D8dS_fXdJunT74P06rLaOjUlpd4VUvAqR3nv8V4"
+*Intento de carga de datos con duenio a datos no accesibles
+curl -X GET http://localhost:3000/api/pets -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NmFkN2Y0NGY2MGEzNzJhNmM1NSIsInVzZXJuYW1lIjoiSnVhblBlcmV6Iiwicm9sZSI6ImR1ZW5pbyIsImlhdCI6MTc3MDE2NDE5MywiZXhwIjoxNzcwMjUwNTkzfQ.9JVefKymLarC6AG0CFpcqRfS8TTBI0HKVHHz2kV_0X0"
 
 RESPUESTA
 []
 
 
-
-Sofi@Mark-1 MINGW64 ~/Desktop
-$ curl -X POST http://localhost:3000/api/historialm \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NjQ4N2Y0NGY2MGEzNzJhNmM1MyIsInVzZXJuYW1lIjoiRHJhU29maSIsInJvbGUiOiJ2ZXRlcmluYXJpbyIsImlhdCI6MTc3MDE1Mzk2MCwiZXhwIjoxNzcwMjQwMzYwfQ.X0R4wlDAr36vIX50QfzR4BZ5n2kgXqc0ohbWsk__6R4" \
-  -d '{
-    "petId": "698268167f44f60a372a6c5a",
-    "descripcion": "Chequeo general y vacunas anuales",
-    "diagnostico": "Paciente sano, peso ideal",
-    "tratamiento": "Se aplica vacuna sextuple. Próxima visita en 1 año."
-  }'
+*Intento de carga de datos con Veterinario a datos accesibles
+curl -X POST http://localhost:3000/api/historialm -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NjQ4N2Y0NGY2MGEzNzJhNmM1MyIsInVzZXJuYW1lIjoiRHJhU29maSIsInJvbGUiOiJ2ZXRlcmluYXJpbyIsImlhdCI6MTc3MDE1Mzk2MCwiZXhwIjoxNzcwMjQwMzYwfQ.X0R4wlDAr36vIX50QfzR4BZ5n2kgXqc0ohbWsk__6R4" -d '{"petId": "698268167f44f60a372a6c5a", "descripcion": "Chequeo general y vacunas anuales", "diagnostico": "Paciente sano, peso ideal", "tratamiento": "Se aplica vacuna sextuple. Próxima visita en 1 año."}'
 
 RESPUESTA
-{"mascota":"698268167f44f60a372a6c5a","veterinario":"698266487f44f60a372a6c53","descripcion":"Chequeo general y vacunas anuales","diagnostico":"Paciente sano, peso ideal","tratamiento":"Se aplica vacuna sextuple. Pr xima visita en 1 a o.","_id":"698275137be14177473ad456","fecha":"2026-02-03T22:22:11.306Z","__v":0}
+{"mascota":"698268167f44f60a372a6c5a","veterinario":"698266487f44f60a372a6c53","descripcion":"Chequeo general y vacunas anuales","diagnostico":"Paciente sano, peso ideal","tratamiento":"Se aplica vacuna sextuple. Pr�xima visita en 1 a�o.","_id":"6982911f6ad8ba3358b41f97","fecha":"2026-02-04T00:21:51.355Z","__v":0}
 
+* Consulta de datos con usuario dueno
+curl -X GET http://localhost:3000/api/pets -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NmFkN2Y0NGY2MGEzNzJhNmM1NSIsInVzZXJuYW1lIjoiSnVhblBlcmV6Iiwicm9sZSI6ImR1ZW5pbyIsImlhdCI6MTc3MDE2NDE5MywiZXhwIjoxNzcwMjUwNTkzfQ.9JVefKymLarC6AG0CFpcqRfS8TTBI0HKVHHz2kV_0X0"
+
+RESPUESTA []
+
+*Consulta con usuario Veterinaria 
+
+curl -X GET http://localhost:3000/api/pets -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODI2NjQ4N2Y0NGY2MGEzNzJhNmM1MyIsInVzZXJuYW1lIjoiRHJhU29maSIsInJvbGUiOiJ2ZXRlcmluYXJpbyIsImlhdCI6MTc3MDE2MzcwNCwiZXhwIjoxNzcwMjUwMTA0fQ.Sq9Dk7X2YdIidfbv92eLrnQGif5UWBw7sdUAYqYx9Lc"
+
+RESPUESTA [{"_id":"698268167f44f60a372a6c5a","nombre":"Firulais","especie":"Perro","edad":5,"duenio":{"_id":"698266487f44f60a372a6c53","username":"DraSofi","email":"sofi@vet.com"},"createdAt":"2026-02-03T21:26:46.911Z","updatedAt":"2026-02-03T21:26:46.911Z","__v":0},{"_id":"69828e4f6ad8ba3358b41f8f","nombre":"Firulais","especie":"Perro","edad":5,"duenio":{"_id":"698266487f44f60a372a6c53","username":"DraSofi","email":"sofi@vet.com"},"createdAt":"2026-02-04T00:09:51.744Z","updatedAt":"2026-02-04T00:09:51.744Z","__v":0}]
 
 Alumno: Sofia Fraga
